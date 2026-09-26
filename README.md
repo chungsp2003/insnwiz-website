@@ -104,7 +104,7 @@ Set these **encrypted secrets** in the Cloudflare Pages project's Settings →
 Variables and Secrets, then redeploy. The current project uses direct deployment,
 not Git auto-deployment:
 
-- `DRIVE_FOLDER_ID`: `1HQkbdEEa2vFENDPm58ySAB0o0RGzsW1v`.
+- `DRIVE_FOLDER_ID`: `1lXllWrzvPQv_U98HKoTamzn8DEaT702i`.
 - `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`: Google OAuth client credentials.
 - `GOOGLE_REFRESH_TOKEN`: offline OAuth refresh token for the account with write
   access to that folder; enable the Drive API and authorize the Drive scope.
