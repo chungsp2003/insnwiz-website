@@ -88,3 +88,39 @@ Bilingual (English/Korean) content, a CMS layer, and analytics/conversion tracki
 out as build requirements in the guide (Section 7) but are integration decisions best made
 once the platform (Cloudflare Pages + Functions vs. a CMS) is settled — the HTML structure
 here doesn't block adding any of them later.
+
+## Google Drive file portal
+
+The shareable page is `https://insnwiz.com/upload/`. Approved accounts can upload,
+browse subfolders, and download files within the configured shared folder. Uploads accept
+one file per submission, up to 20 MB, and save into the main folder. Downloads
+are streamed; Google Docs, Slides, and Drawings export as PDF, Sheets as XLSX.
+Shortcuts are excluded so they cannot expose files outside this folder.
+The visitor needs an approved email and website password, but no Google login.
+Files remain private; authenticated users can see the shared folder contents.
+Credentials are held in browser memory only and cleared on sign-out/reload.
+
+Set these **encrypted secrets** in the Cloudflare Pages project's Settings →
+Variables and Secrets, then redeploy. The current project uses direct deployment,
+not Git auto-deployment:
+
+- `DRIVE_FOLDER_ID`: `1lXllWrzvPQv_U98HKoTamzn8DEaT702i`.
+- `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`: Google OAuth client credentials.
+- `GOOGLE_REFRESH_TOKEN`: offline OAuth refresh token for the account with write
+  access to that folder; enable the Drive API and authorize the Drive scope.
+  Use a production OAuth consent configuration for a lasting connection.
+- `UPLOAD_USERS_JSON`: email-to-password-hash mapping generated using
+  `python3 scripts/upload_account.py EMAIL /private/tmp/upload-users.json`.
+  The script prompts privately for a password and adds or updates that account.
+  Paste the resulting JSON into this encrypted secret. Send each password to its
+  user privately. Remove an email and update the secret to revoke access.
+
+Use a dedicated folder for incoming files. The destination cannot be selected
+by visitors. Configure a Cloudflare rate-limit rule for all three portal API routes if sharing
+with a broad audience. Use long unique passwords. Password hashes use salted PBKDF2-SHA256 (100,000 iterations). Do not commit
+credentials or place them in browser JavaScript. The existing photo-note app's
+OAuth credentials can be reused only with the owner's authorization.
+
+No build step is required. Static dashboard drag-and-drop deployments do not
+compile Pages Functions; deploy through the connected Git repository or Wrangler.
+Run endpoint tests with `node --test tests/upload.test.mjs`.
