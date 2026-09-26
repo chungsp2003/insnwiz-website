@@ -89,15 +89,20 @@ out as build requirements in the guide (Section 7) but are integration decisions
 once the platform (Cloudflare Pages + Functions vs. a CMS) is settled — the HTML structure
 here doesn't block adding any of them later.
 
-## Google Drive file upload
+## Google Drive file portal
 
-The shareable page is `https://insnwiz.com/upload/`. It accepts one file per
-submission, up to 20 MB, and saves it in a fixed server-configured Drive folder.
-The visitor needs an approved email and website password, but no Google login. Files are not
-made public and the API does not expose the folder contents or credentials.
+The shareable page is `https://insnwiz.com/upload/`. Approved accounts can upload,
+browse subfolders, and download files within the Marex folder. Uploads accept
+one file per submission, up to 20 MB, and save into the main folder. Downloads
+are streamed; Google Docs, Slides, and Drawings export as PDF, Sheets as XLSX.
+Shortcuts are excluded so they cannot expose files outside this folder.
+The visitor needs an approved email and website password, but no Google login.
+Files remain private; authenticated users can see the shared folder contents.
+Credentials are held in browser memory only and cleared on sign-out/reload.
 
 Set these **encrypted secrets** in the Cloudflare Pages project's Settings →
-Variables and Secrets, then redeploy (Git integration builds Pages Functions):
+Variables and Secrets, then redeploy. The current project uses direct deployment,
+not Git auto-deployment:
 
 - `DRIVE_FOLDER_ID`: `1lXllWrzvPQv_U98HKoTamzn8DEaT702i`.
 - `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`: Google OAuth client credentials.
@@ -111,7 +116,7 @@ Variables and Secrets, then redeploy (Git integration builds Pages Functions):
   user privately. Remove an email and update the secret to revoke access.
 
 Use a dedicated folder for incoming files. The destination cannot be selected
-by visitors. Configure a Cloudflare rate-limit rule for `/api/upload` if sharing
+by visitors. Configure a Cloudflare rate-limit rule for all three portal API routes if sharing
 with a broad audience. Use long unique passwords. Password hashes use salted PBKDF2-SHA256 (100,000 iterations). Do not commit
 credentials or place them in browser JavaScript. The existing photo-note app's
 OAuth credentials can be reused only with the owner's authorization.

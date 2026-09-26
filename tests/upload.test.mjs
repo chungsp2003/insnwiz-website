@@ -41,3 +41,54 @@ test('uploads into server-selected folder and handles Google failures without le
     assert.doesNotMatch(await failed.text(), /private error|private-token/);
   } finally { globalThis.fetch = original; }
 });
+
+test('browse and download enforce folder boundaries and support Google document exports', async () => {
+  const { onRequest: browse } = await import('../functions/api/files.js');
+  const { onRequest: download } = await import('../functions/api/download.js');
+  const original = globalThis.fetch;
+  const call = (handler, data, headers = {}) => handler({ request: request(headers, JSON.stringify(data)), env });
+  const folder = 'application/vnd.google-apps.folder';
+  const records = {
+    'fixed-folder': { id: 'fixed-folder', name: 'Shared', mimeType: folder },
+    nested: { id: 'nested', name: 'Nested', mimeType: folder, parents: ['fixed-folder'] },
+    inside: { id: 'inside', name: 'notes.txt', mimeType: 'text/plain', parents: ['nested'] },
+    outside: { id: 'outside', name: 'private.txt', mimeType: 'text/plain', parents: ['other-root'] },
+    'other-root': { id: 'other-root', mimeType: folder },
+    deleted: { id: 'deleted', mimeType: 'text/plain', parents: ['fixed-folder'], trashed: true },
+    shortcut: { id: 'shortcut', mimeType: 'application/vnd.google-apps.shortcut', parents: ['fixed-folder'] },
+    doc: { id: 'doc', name: 'Report', mimeType: 'application/vnd.google-apps.document', parents: ['fixed-folder'] },
+  };
+  let mediaRequests = 0;
+  globalThis.fetch = async url => {
+    if (url.includes('oauth2')) return Response.json({ access_token: 'token' });
+    const u = new URL(url);
+    if (u.pathname.endsWith('/files')) {
+      assert.match(u.searchParams.get('q'), /'nested' in parents/);
+      return Response.json({ files: [records.inside], nextPageToken: 'next' });
+    }
+    if (u.searchParams.get('alt') === 'media' || u.pathname.endsWith('/export')) {
+      mediaRequests++;
+      if (u.pathname.endsWith('/export')) assert.equal(u.searchParams.get('mimeType'), 'application/pdf');
+      return new Response('file bytes');
+    }
+    const id = u.pathname.split('/').at(-1);
+    return records[id] ? Response.json(records[id]) : new Response('', { status: 404 });
+  };
+  try {
+    for (const id of ['outside', 'deleted', 'shortcut']) assert.equal((await call(download, { id })).status, 403);
+    assert.equal(mediaRequests, 0);
+    assert.equal((await call(browse, { folder: 'other-root' })).status, 403);
+    assert.equal((await call(browse, {}, { 'X-Upload-Password': 'bad' })).status, 401);
+    const listed = await call(browse, { folder: 'nested' });
+    assert.equal(listed.status, 200);
+    assert.equal((await listed.json()).nextPageToken, 'next');
+    const file = await call(download, { id: 'inside' });
+    assert.equal(file.status, 200);
+    assert.equal(await file.text(), 'file bytes');
+    assert.match(file.headers.get('Content-Disposition'), /notes.txt/);
+    const doc = await call(download, { id: 'doc' });
+    assert.match(doc.headers.get('Content-Disposition'), /Report.pdf/);
+    assert.equal(await doc.text(), 'file bytes');
+    assert.equal(mediaRequests, 2);
+  } finally { globalThis.fetch = original; }
+});
