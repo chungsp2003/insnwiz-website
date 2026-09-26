@@ -92,7 +92,7 @@ here doesn't block adding any of them later.
 ## Google Drive file portal
 
 The shareable page is `https://insnwiz.com/upload/`. Approved accounts can upload,
-browse subfolders, and download files within the Marex folder. Uploads accept
+browse subfolders, and download files within the configured shared folder. Uploads accept
 one file per submission, up to 20 MB, and save into the main folder. Downloads
 are streamed; Google Docs, Slides, and Drawings export as PDF, Sheets as XLSX.
 Shortcuts are excluded so they cannot expose files outside this folder.
@@ -104,7 +104,7 @@ Set these **encrypted secrets** in the Cloudflare Pages project's Settings →
 Variables and Secrets, then redeploy. The current project uses direct deployment,
 not Git auto-deployment:
 
-- `DRIVE_FOLDER_ID`: `1lXllWrzvPQv_U98HKoTamzn8DEaT702i`.
+- `DRIVE_FOLDER_ID`: `1HQkbdEEa2vFENDPm58ySAB0o0RGzsW1v`.
 - `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`: Google OAuth client credentials.
 - `GOOGLE_REFRESH_TOKEN`: offline OAuth refresh token for the account with write
   access to that folder; enable the Drive API and authorize the Drive scope.
