@@ -67,13 +67,14 @@ this is marked with a visible amber "Template" placeholder box in the HTML — s
 - **SLA / response-time figures** — intentionally left as qualitative ("where contracted")
   rather than invented numbers; add real figures only once contracted.
 
-## Wiring the contact form
+## Contact form
 
-`contact/index.html` (`#rfq-form`) currently only shows a status message on submit — it does
-not send anywhere. To make it functional, either:
-- Point the `<form>` at a Cloudflare Pages Function (`/functions/api/contact.ts`) that emails
-  or forwards submissions, or
-- Use a form backend (e.g. a forms API you already run) and update the JS in `assets/main.js`.
+`contact/index.html` (`#rfq-form`) posts via `assets/main.js` to FormSubmit
+(`https://formsubmit.co/ajax/ben@insnwiz.com`), which emails each submission to ben@insnwiz.com.
+The first submission sends an activation email to that inbox — click the confirmation link once.
+To change the recipient, edit `ENDPOINT` in `assets/main.js`. The CSP in `_headers` allows
+`connect-src https://formsubmit.co`. For a self-hosted option, replace it with a Cloudflare Pages
+Function plus an email provider.
 
 ## Note on the AI positioning
 
