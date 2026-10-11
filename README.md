@@ -49,23 +49,13 @@ technical/secondary voice.)
 3. Cloudflare Pages will pick up `_headers`, `robots.txt` and `sitemap.xml` automatically.
 4. Point the `www.insnwiz.com` custom domain at the new Pages project once you're ready to cut over.
 
-## What must be replaced before this goes live
+## Content status
 
-The guide is explicit: **do not publish SLA response times, 24/7 availability,
-certifications, partner status, customer logos, AI capabilities, geographic coverage or
-quantitative claims unless contractually and factually verified.** Every page that touches
-this is marked with a visible amber "Template" placeholder box in the HTML — search for
-`placeholder-note` or `[bracketed text]` to find every spot that needs real content:
-
-- **Case studies** (`projects/index.html` and the "Proof" section on each service page) —
-  currently structural templates only. Fill in only client-approved, verified details.
-- **Certifications / partnerships** (`about/index.html`) — none are listed; add only what's
-  currently accredited.
-- **Contact details** (`contact/index.html`) — placeholder email/phone; add real, monitored
-  ones.
-- **Office addresses** (`about/index.html`) — placeholder text for Seoul and Hong Kong.
-- **SLA / response-time figures** — intentionally left as qualitative ("where contracted")
-  rather than invented numbers; add real figures only once contracted.
+The site contains no visible template boxes or placeholder contact details. The Projects
+and Insights pages currently explain that case studies and articles will be published
+when approved content is available. Add client names, results, certifications, office
+addresses, service levels, and coverage claims only after they are verified and cleared
+for publication.
 
 ## Contact form
 
