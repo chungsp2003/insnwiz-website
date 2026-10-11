@@ -14,7 +14,7 @@ services/managed-it.html                Managed IT Services
 services/data-center-maintenance.html   IT & Data Center Maintenance
 services/professional-project-services.html   Professional & Project Services
 insights/index.html                     Insights
-about/index.html                        About / Locations
+about/index.html                        About / Location
 contact/index.html                      Contact / RFQ
 assets/styles.css                       Shared design system (all pages)
 assets/main.js                          Mobile nav + form UX (no backend)
@@ -113,3 +113,4 @@ OAuth credentials can be reused only with the owner's authorization.
 No build step is required. Static dashboard drag-and-drop deployments do not
 compile Pages Functions; deploy through the connected Git repository or Wrangler.
 Run endpoint tests with `node --test tests/upload.test.mjs`.
+
