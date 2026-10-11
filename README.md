@@ -13,7 +13,6 @@ services/it-digital-solutions.html      IT Services & Digital Solutions
 services/managed-it.html                Managed IT Services
 services/data-center-maintenance.html   IT & Data Center Maintenance
 services/professional-project-services.html   Professional & Project Services
-projects/index.html                     Projects / Case Studies
 insights/index.html                     Insights
 about/index.html                        About / Locations
 contact/index.html                      Contact / RFQ
@@ -51,11 +50,10 @@ technical/secondary voice.)
 
 ## Content status
 
-The site contains no visible template boxes or placeholder contact details. The Projects
-and Insights pages currently explain that case studies and articles will be published
-when approved content is available. Add client names, results, certifications, office
-addresses, service levels, and coverage claims only after they are verified and cleared
-for publication.
+The site contains no visible case-study templates or placeholder contact details. The
+Insights page currently explains that articles will be published when available. Add
+client names, results, certifications, office addresses, service levels, and coverage
+claims only after they are verified and cleared for publication.
 
 ## Contact form
 
