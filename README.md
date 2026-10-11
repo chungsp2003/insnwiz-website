@@ -114,3 +114,30 @@ No build step is required. Static dashboard drag-and-drop deployments do not
 compile Pages Functions; deploy through the connected Git repository or Wrangler.
 Run endpoint tests with `node --test tests/upload.test.mjs`.
 
+## Private Kiwoom Stock area
+
+`/stock/` is a private, read-only Korean stock quote page. A Cloudflare Pages
+Function checks HTTP Basic credentials before serving the page or quote API.
+The page is served by the Function rather than a static HTML file, so a static
+deployment cannot expose it accidentally. It uses Kiwoom's official OAuth token
+endpoint and `ka10001` stock-information API server-side, following the
+[official Kiwoom REST API repository](https://github.com/Kiwoom-Securities/Kiwoom-REST-API).
+No trading endpoint is
+implemented. Keep this path out of public navigation and search indexing.
+
+Set these encrypted Cloudflare Pages secrets before deploying:
+
+- `STOCK_USERS_JSON`: a separate email/password-hash mapping generated with
+  `python3 scripts/upload_account.py ben@insnwiz.com /private/tmp/stock-users.json`.
+  Put only approved Stock users in this secret; it is independent of the file portal.
+- `KIWOOM_APP_KEY` and `KIWOOM_APP_SECRET`: keys from the Kiwoom OpenAPI portal.
+- `KIWOOM_MODE`: `demo` for mock investment or `real` for the live environment.
+  Use keys for the matching mode. The default is deliberately unset, so this
+  integration fails closed until an environment is explicitly chosen.
+
+Do not put Kiwoom keys, passwords, or tokens in Git or browser code. This is a
+Pages Functions feature, so publish through Git integration or Wrangler rather
+than static direct upload. Configure a Cloudflare rate-limit rule for `/stock/*`
+before broad use. The browser may remember HTTP Basic credentials until closed;
+use a private browser session on shared computers.
+

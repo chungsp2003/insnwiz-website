@@ -26,4 +26,5 @@ fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
 os.fchmod(fd, 0o600)
 with os.fdopen(fd, 'w') as output:
     json.dump(users, output)
-print('Account saved. Set UPLOAD_USERS_JSON from the private output file.')
+print('Account saved. Set the appropriate Cloudflare users secret from the private output file.')
+
